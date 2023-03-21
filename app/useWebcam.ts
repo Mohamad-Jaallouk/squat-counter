@@ -26,7 +26,7 @@ const useWebcam = () => {
     return () => {
       webcam?.stop();
     };
-  }, []);
+  }, [webcam]);
 
   return {
     webcamRef,
