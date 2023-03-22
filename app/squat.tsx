@@ -2,20 +2,19 @@
 
 import "@tensorflow/tfjs-backend-cpu";
 import Form from "./form";
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import useModel from "./useModel";
 import useWebcam from "./useWebcam";
 import useCameraPermission from "./useCameraPermission";
-import Webcam from "react-webcam";
 
 export default function Squat() {
   const [reps, setReps] = useState(0);
 
+  const model = useModel();
+
   const cameraPermission = useCameraPermission();
   const webcamEnabled = cameraPermission === "granted";
   const { webcamRef, webcam } = useWebcam(webcamEnabled);
-
-  const model = useModel();
 
   function handleSubmit(
     event: React.FormEvent<HTMLFormElement>,
@@ -24,6 +23,17 @@ export default function Squat() {
     event.preventDefault();
     setReps(submittedReps);
   }
+
+  const GetAccess = () => {
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+    });
+    return null;
+  };
 
   return (
     <>
@@ -36,13 +46,11 @@ export default function Squat() {
           <h1 className="text-3xl font-bold underline">
             Please allow camera access...
           </h1>
-          <Webcam height={0} width={0} />
+          <GetAccess />
         </>
       )}
 
-      {reps > 0 && cameraPermission === "granted" && (
-        <h1>Camera access granted</h1>
-      )}
+      {reps > 0 && cameraPermission === "granted" && <h1>Access granted!</h1>}
     </>
   );
 }

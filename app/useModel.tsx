@@ -3,11 +3,9 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-cpu";
 import { useEffect, useState } from "react";
 async function useModel() {
-  console.log("Run useModel");
   const [model, setModel] = useState<poseDetection.PoseDetector>();
 
   useEffect(() => {
-    console.log("Run useModel useEffect");
     async function load() {
       const modelConfig = poseDetection.SupportedModels.MoveNet;
       const detector = await poseDetection.createDetector(modelConfig);
