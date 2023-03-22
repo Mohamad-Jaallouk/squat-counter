@@ -12,6 +12,7 @@ import useCameraPermission from "./useCameraPermission";
 
 export default function Squat() {
   const [reps, setReps] = useState(0);
+  const webcamRef2 = useRef<HTMLVideoElement>(null);
 
   const { webcamRef, webcam } = useWebcam();
 
@@ -23,17 +24,18 @@ export default function Squat() {
     setReps(submittedReps);
   }
 
+  console.log("Run something in between");
+
   const model = useModel();
   const cameraPermission = useCameraPermission();
-  console.log("Render");
-  console.log(webcamRef.current);
-  if (!webcamRef.current) {
-    return <h1>Loading...</h1>;
-  }
+  console.log("Run last");
+  console.log(webcamRef2.current);
 
   return (
     <>
-      {/* <CameraComponent videoRef={webcamRef} /> */}
+      <video autoPlay playsInline muted ref={webcamRef2} />
+
+      {/* <CameraComponent videoRef={webcamRef} />
       <p>Status: {cameraPermission}</p>
       {reps === 0 ? (
         <Form handleSubmit={handleSubmit} />
@@ -45,7 +47,7 @@ export default function Squat() {
             Please allow camera access
           </h1>
         </>
-      )}
+      )} */}
     </>
   );
 }

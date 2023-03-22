@@ -1,13 +1,15 @@
 import { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-cpu";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 
 const useWebcam = () => {
+  console.log("Run useWebcam");
   const webcamRef = useRef<HTMLVideoElement>(null);
   const [webcam, setWebcam] = useState<WebcamIterator | undefined>();
 
   useEffect(() => {
-    console.log("Initializing webcam...");
+    console.log("Run useWebcam useEffect");
     const initializeWebcam = async () => {
       if (!webcamRef.current) return;
 
