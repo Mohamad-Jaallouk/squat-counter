@@ -25,9 +25,14 @@ export default function Squat() {
     setReps(submittedReps);
   }
 
+  const Cam = () => {
+    return <video autoPlay playsInline muted ref={webcamRef} />;
+  };
+
   return (
     <>
       <video autoPlay playsInline muted ref={webcamRef} />
+      {/* <Cam /> */}
 
       {reps === 0 && <Form handleSubmit={handleSubmit} />}
 
