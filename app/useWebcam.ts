@@ -2,10 +2,11 @@ import { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-cpu";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import useCameraPermission from "./useCameraPermission";
 
-const useWebcam = () => {
+const useWebcam = (webcamEnabled: boolean) => {
   console.log("Run useWebcam");
-  const webcamRef = useRef<HTMLVideoElement>(null);
+  const webcamRef = useRef<HTMLVideoElement | null>(null);
   const [webcam, setWebcam] = useState<WebcamIterator | undefined>();
 
   useEffect(() => {
@@ -13,9 +14,15 @@ const useWebcam = () => {
     const initializeWebcam = async () => {
       if (!webcamRef.current) return;
 
+      if (!webcamEnabled) return;
+
       try {
         webcamRef.current.width = 1280;
         webcamRef.current.height = 720;
+        const videoElement = document.createElement("video");
+        // videoElement.width = 100;
+        // videoElement.height = 100;
+        // const initializedWebcam = await tf.data.webcam(videoElement);
         const initializedWebcam = await tf.data.webcam(webcamRef.current);
         setWebcam(initializedWebcam);
       } catch (error) {
@@ -28,7 +35,8 @@ const useWebcam = () => {
     return () => {
       webcam?.stop();
     };
-  }, [webcam]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webcamRef, webcamEnabled]);
 
   return {
     webcamRef,
