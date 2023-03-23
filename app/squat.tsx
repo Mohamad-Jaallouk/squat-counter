@@ -7,7 +7,7 @@ import useWebcam from "./useWebcam";
 import useCameraPermission from "./useCameraPermission";
 import SquatRun from "./squatrun";
 
-export default function Squat({ nReps = 5 }: { nReps: number }) {
+export default function Squat({ nReps }: { nReps: number }) {
   const [reps, setReps] = useState(nReps);
   const [squatCount, setSquatCount] = useState(0);
 
