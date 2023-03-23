@@ -1,14 +1,15 @@
 "use client";
 
 import "@tensorflow/tfjs-backend-cpu";
-import Form from "./form";
 import { useState, useRef, useCallback, useEffect } from "react";
 import useModel from "./useModel";
 import useWebcam from "./useWebcam";
 import useCameraPermission from "./useCameraPermission";
+import SquatRun from "./squatrun";
 
-export default function Squat() {
-  const [reps, setReps] = useState(0);
+export default function Squat({ nReps }: { nReps: number }) {
+  const [reps, setReps] = useState(nReps);
+  const [squatCount, setSquatCount] = useState(0);
 
   const model = useModel();
 
@@ -16,41 +17,66 @@ export default function Squat() {
   const webcamEnabled = cameraPermission === "granted";
   const { webcamRef, webcam } = useWebcam(webcamEnabled);
 
-  function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-    submittedReps: number
-  ) {
-    event.preventDefault();
-    setReps(submittedReps);
-  }
-
-  const GetAccess = () => {
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-    });
+  const GetCameraAccess = () => {
+    useEffect(() => {
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+    }, []);
     return null;
+  };
+
+  const toggleFullScreen = () => {
+    if (webcamRef.current) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        webcamRef.current.requestFullscreen();
+      }
+    }
   };
 
   return (
     <>
-      <video autoPlay playsInline muted ref={webcamRef} />
+      <video
+        autoPlay
+        playsInline
+        muted
+        ref={webcamRef}
+        onClick={toggleFullScreen}
+      />
 
-      {reps === 0 && <Form handleSubmit={handleSubmit} />}
-
-      {reps > 0 && cameraPermission !== "granted" && (
+      {cameraPermission !== "granted" && (
         <>
           <h1 className="text-3xl font-bold underline">
             Please allow camera access...
           </h1>
-          <GetAccess />
+          <GetCameraAccess />
         </>
       )}
 
-      {reps > 0 && cameraPermission === "granted" && <h1>Access granted!</h1>}
+      {cameraPermission === "granted" &&
+        (squatCount < 5 ? (
+          <>
+            {" "}
+            <h1>Access granted!</h1>
+            <SquatRun
+              webcam={webcam}
+              model={model}
+              squatCount={squatCount}
+              setSquatCount={setSquatCount}
+            />
+          </>
+        ) : (
+          <>
+            <h1>Access granted!</h1>
+            <h1>Great job! You have completed your workout!</h1>
+          </>
+        ))}
     </>
   );
 }
