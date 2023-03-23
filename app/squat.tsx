@@ -18,13 +18,15 @@ export default function Squat({ nReps }: { nReps: number }) {
   const { webcamRef, webcam } = useWebcam(webcamEnabled);
 
   const GetCameraAccess = () => {
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-    });
+    useEffect(() => {
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+    }, []);
     return null;
   };
 
