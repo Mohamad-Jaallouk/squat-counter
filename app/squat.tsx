@@ -30,16 +30,6 @@ export default function Squat({ nReps }: { nReps: number }) {
     return null;
   };
 
-  const toggleFullScreen = () => {
-    if (webcamRef.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        webcamRef.current.requestFullscreen();
-      }
-    }
-  };
-
   return (
     <>
       <video
@@ -47,7 +37,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         playsInline
         muted
         ref={webcamRef}
-        onClick={toggleFullScreen}
+        className="w-full h-full object-cover fixed top-0 left-0 "
       />
 
       {cameraPermission !== "granted" && (
@@ -63,7 +53,9 @@ export default function Squat({ nReps }: { nReps: number }) {
         (squatCount < 5 ? (
           <>
             {" "}
-            <h1>Access granted!</h1>
+            <div className="text-7xl relative">
+              <h1>Access granted!</h1>
+            </div>
             <SquatRun
               webcam={webcam}
               model={model}
