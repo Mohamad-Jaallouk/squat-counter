@@ -72,7 +72,7 @@ export default function Squat({ nReps = 5 }: { nReps: number }) {
         ) : (
           <>
             <h1>Access granted!</h1>
-            <h1>Great job! You've completed your workout!</h1>
+            <h1>Great job! You have completed your workout!</h1>
           </>
         ))}
     </>
