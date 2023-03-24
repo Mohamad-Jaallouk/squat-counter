@@ -11,6 +11,8 @@ import loadModel from "./model";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import React from "react";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import Card from "./card";
+import CameraIcon from "./cameraIcon";
 
 export default function Squat({ nReps }: { nReps: number }) {
   // const [reps, setReps] = useState(nReps);
@@ -78,7 +80,29 @@ export default function Squat({ nReps }: { nReps: number }) {
       />
 
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
-        <CameraPermissionPrompt onPermissionGranted={handlePermissionGranted} />
+        <>
+          <Card
+            large={true}
+            title={
+              "To count your squats accurately and provide real-time feedback, we need access to your camera. Would you like to grant access?"
+            }
+            description={""}
+            demo={
+              <a
+                className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
+                href="https://github.com/steven-tey/precedent"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <CameraIcon />
+                <p>Star on GitHub</p>
+              </a>
+            }
+          ></Card>
+          <CameraPermissionPrompt
+            onPermissionGranted={handlePermissionGranted}
+          />
+        </>
       )}
 
       {step === 1 && (
