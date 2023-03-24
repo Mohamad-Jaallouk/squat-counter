@@ -15,51 +15,47 @@ interface WebcamProps {
 const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
   const [holdCount, setHoldCount] = useState(0);
 
-  const [modelInstance, setModelInstance] =
-    useState<poseDetection.PoseDetector>();
+  // const [modelInstance, setModelInstance] =
+  //   useState<poseDetection.PoseDetector>();
 
-  const [webcamInstance, setWebcamInstance] = useState<WebcamIterator>();
+  // const [webcamInstance, setWebcamInstance] = useState<WebcamIterator>();
+
+  // useEffect(() => {
+  //   const loadModel = async () => {
+  //     const loadedModel = await model;
+  //     setModelInstance(loadedModel);
+  //   };
+  //   loadModel();
+  // }, [model]);
+
+  // useEffect(() => {
+  //   const loadWebcam = async () => {
+  //     const lodadedWebcam = await webcam;
+  //     setWebcamInstance(lodadedWebcam);
+  //   };
+  //   loadWebcam();
+  // }, [webcam]);
 
   useEffect(() => {
-    const loadModel = async () => {
-      const loadedModel = await model;
-      setModelInstance(loadedModel);
-    };
-    loadModel();
-  }, [model]);
-
-  useEffect(() => {
-    const loadWebcam = async () => {
-      const lodadedWebcam = await webcam;
-      setWebcamInstance(lodadedWebcam);
-    };
-    loadWebcam();
-  }, [webcam]);
-
-  useEffect(() => {
-    if (!modelInstance) return;
-    if (!webcamInstance) return;
+    if (!model || !webcam) return;
 
     const intervalId = setInterval(async () => {
-      const img = await webcamInstance.capture();
-      const poses = await modelInstance.estimatePoses(img);
+      const img = await webcam.capture();
+      const poses = await model.estimatePoses(img);
       img.dispose();
-      console.log(poses);
-      if (poses.length && poses[0].score! > 0.8) {
-        console.log(poses[0].score);
-
-        // if (8000 > 2000) {
-        //   setHoldCount((prevHoldCount) => prevHoldCount + 1);
-        // }
-      }
-
-      if (8000 > 2000) {
+      console.log(poses.length && poses[0].score);
+      if (poses.length && poses[0].score! > 0.4) {
+        // console.log(poses[0].score);
         setHoldCount((prevHoldCount) => prevHoldCount + 1);
       }
+
+      // if (8000 > 2000) {
+      //   setHoldCount((prevHoldCount) => prevHoldCount + 1);
+      // }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [modelInstance, webcamInstance]);
+  }, [model, webcam]);
 
   useEffect(() => {
     if (holdCount === 5) {

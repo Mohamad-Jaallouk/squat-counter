@@ -13,10 +13,11 @@ import React from "react";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 
 export default function Squat({ nReps }: { nReps: number }) {
-  const [reps, setReps] = useState(nReps);
-  const [squatCount, setSquatCount] = useState(0);
+  // const [reps, setReps] = useState(nReps);
+  const [reps, setReps] = useState(5);
+  // const [squatCount, setSquatCount] = useState(0);
   const [step, setStep] = useState(0);
-  const [model, setModel] = useState<poseDetection.PoseDetector | undefined>();
+  const [model, setModel] = useState<poseDetection.PoseDetector>();
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const [webcam, setWebcam] = useState<WebcamIterator | null>(null);
   // const [cameraPermission, setCameraPermission] = useState();
@@ -24,15 +25,22 @@ export default function Squat({ nReps }: { nReps: number }) {
   const cameraPermission = useCheckPermission();
 
   useEffect(() => {
-    async function runLoadModel() {
-      const model = await loadModel();
-      setModel(model);
+    if (step === 0 && cameraPermission === "granted") {
+      setStep(1);
     }
-    runLoadModel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cameraPermission]);
+
+  useEffect(() => {
+    const initModel = async () => {
+      const modelInstance = await loadModel();
+      setModel(modelInstance);
+    };
+    initModel();
   }, []);
 
   useEffect(() => {
-    async function runLoadWebcam() {
+    const initWebcam = async () => {
       if (!webcamRef.current) return;
       if (cameraPermission === "granted") {
         try {
@@ -42,13 +50,11 @@ export default function Squat({ nReps }: { nReps: number }) {
           console.error("Error initializing webcam:", error);
         }
       }
-    }
-    runLoadWebcam();
+    };
+    initWebcam();
   }, [cameraPermission]);
 
-  function handleStep() {
-    setStep((prevStep) => prevStep + 1);
-  }
+  const handleStep = () => setStep((prevStep) => prevStep + 1);
 
   const handlePermissionGranted = async () => {
     handleStep();
@@ -75,33 +81,22 @@ export default function Squat({ nReps }: { nReps: number }) {
         <CameraPermissionPrompt onPermissionGranted={handlePermissionGranted} />
       )}
 
-      {/* {step === 1 && <h1 className="text-7xl relative">123</h1>}
-
       {step === 1 && (
         <Hold webcam={webcam} model={model} onStepChange={handleStep} />
-      )} */}
+      )}
 
-      {step === 2 &&
-        cameraPermission === "granted" &&
-        (squatCount < 5 ? (
-          <>
-            <div className="text-7xl relative">
-              <h1>step: {step}</h1>
-              <h1>Access granted!</h1>
-            </div>
-            <SquatRun
-              webcam={webcam}
-              model={model}
-              squatCount={squatCount}
-              setSquatCount={setSquatCount}
-            />
-          </>
-        ) : (
-          <>
-            <h1>Access granted!</h1>
-            <h1>Great job! You have completed your workout!</h1>
-          </>
-        ))}
+      {step === 2 && cameraPermission === "granted" && (
+        <>
+          <SquatRun
+            onStepChange={handleStep}
+            webcam={webcam}
+            model={model}
+            nReps={nReps}
+            // squatCount={squatCount}
+            // setSquatCount={setSquatCount}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -3,9 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { calculateAngle, convertToDegrees, landMark } from "./appl";
-import React, { RefObject } from "react";
-import { PoseDetector } from "@tensorflow-models/pose-detection";
-// import { Box, Card, CardContent, Typography } from "@mui/material";
 
 function _squat(landMarks: any, prev: any, setSquatCount: any) {
   let kneeAngleRadians = calculateAngle(
@@ -23,31 +20,19 @@ function _squat(landMarks: any, prev: any, setSquatCount: any) {
 }
 
 interface WebcamProps {
-  squatCount: number;
-  setSquatCount: React.Dispatch<React.SetStateAction<number>>;
+  // squatCount: number;
+  // setSquatCount: React.Dispatch<React.SetStateAction<number>>;
+  onStepChange: () => void;
   webcam: any;
   model: poseDetection.PoseDetector | undefined;
+  nReps: number;
 }
 
-const SquatRun = ({
-  squatCount,
-  setSquatCount,
-  webcam,
-  model,
-}: WebcamProps) => {
-  // const [squatCount, setSquatCount] = useState(0);
+function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
+  const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
-
-  // const [modelInstance, setModelInstance] =
-  //   useState<poseDetection.PoseDetector>();
-
-  // useEffect(() => {
-  //   const loadModel = async () => {
-  //     const loadedModel = await model;
-  //     setModelInstance(loadedModel);
-  //   };
-  //   loadModel();
-  // }, [model]);
+  console.log("nReps", nReps);
+  console.log("squatCount", squatCount);
 
   useEffect(() => {
     const runSquat = async () => {
@@ -70,11 +55,18 @@ const SquatRun = ({
     console.log("After runSquat");
   }, [webcam, model, setSquatCount]);
 
+  useEffect(() => {
+    if (squatCount === nReps) {
+      onStepChange();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [squatCount]);
+
   return (
     <>
-      <h1 className="text-7xl relative">{squatCount}</h1>
+      <h1 className="text-7xl relative text-red-600">{squatCount}</h1>
     </>
   );
-};
+}
 
 export default SquatRun;
