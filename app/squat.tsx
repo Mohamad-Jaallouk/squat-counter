@@ -93,7 +93,7 @@ export default function Squat({ nReps }: { nReps: number }) {
               <>
                 <a
                   className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
-                  href={123}
+                  // href={123}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
