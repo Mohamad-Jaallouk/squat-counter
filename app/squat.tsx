@@ -84,20 +84,10 @@ export default function Squat({ nReps }: { nReps: number }) {
           <Card
             large={true}
             title={
-              "To count your squats accurately and provide real-time feedback, we need access to your camera. Would you like to grant access?"
+              "We need access to your camera. Would you like to grant access?"
             }
             description={""}
-            demo={
-              <a
-                className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
-                href="https://github.com/steven-tey/precedent"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <CameraIcon />
-                <p>Star on GitHub</p>
-              </a>
-            }
+            demo={<CameraIcon />}
           ></Card>
           <CameraPermissionPrompt
             onPermissionGranted={handlePermissionGranted}

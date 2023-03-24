@@ -20,11 +20,12 @@ export default function Card({
       }`}
     >
       <div className="flex h-60 items-center justify-center">{demo}</div>
-      <div className="flex h-60 items-center justify-center">{demo}</div>
+
       <div className="mx-auto max-w-md text-center">
-        <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
+        <h2 className="bg-gradient-to-br from-black to-black bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
           <Balancer>{title}</Balancer>
         </h2>
+
         {/* <div className="prose-sm -mt-2 leading-normal text-gray-500 md:prose">
           <Balancer>
             <ReactMarkdown
@@ -52,6 +53,7 @@ export default function Card({
           </Balancer>
         </div> */}
       </div>
+      <div className="flex h-60 items-center justify-center">{demo}</div>
     </div>
   );
 }
