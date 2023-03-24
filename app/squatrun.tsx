@@ -26,7 +26,7 @@ interface WebcamProps {
   squatCount: number;
   setSquatCount: React.Dispatch<React.SetStateAction<number>>;
   webcam: any;
-  model: Promise<PoseDetector | undefined>;
+  model: poseDetection.PoseDetector | undefined;
 }
 
 const SquatRun = ({
@@ -38,11 +38,22 @@ const SquatRun = ({
   // const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
 
+  // const [modelInstance, setModelInstance] =
+  //   useState<poseDetection.PoseDetector>();
+
+  // useEffect(() => {
+  //   const loadModel = async () => {
+  //     const loadedModel = await model;
+  //     setModelInstance(loadedModel);
+  //   };
+  //   loadModel();
+  // }, [model]);
+
   useEffect(() => {
     const runSquat = async () => {
-      if (!webcam || !model) return; // TODO: #3 Model is a promise, so it's always truthy
+      if (!webcam || !model) return;
       const img = await webcam.capture();
-      const poses = await model.then((m) => m!.estimatePoses(img));
+      const poses = await model.estimatePoses(img);
       img.dispose();
       if (poses.length > 0 && poses[0].score! > 0.5) {
         const landMarks = poses[0].keypoints;
@@ -53,11 +64,17 @@ const SquatRun = ({
     };
 
     console.log("Before runSquat");
+    console.log(webcam);
+    console.log(model);
     requestAnimationFrame(runSquat);
     console.log("After runSquat");
   }, [webcam, model, setSquatCount]);
 
-  return <>{squatCount}</>;
+  return (
+    <>
+      <h1 className="text-7xl relative">{squatCount}</h1>
+    </>
+  );
 };
 
 export default SquatRun;
