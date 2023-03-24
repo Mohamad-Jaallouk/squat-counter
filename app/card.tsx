@@ -6,11 +6,13 @@ export default function Card({
   title,
   description,
   demo,
+  demo2,
   large,
 }: {
   title: string;
   description: string;
   demo: ReactNode;
+  demo2: ReactNode;
   large?: boolean;
 }) {
   return (
@@ -53,7 +55,7 @@ export default function Card({
           </Balancer>
         </div> */}
       </div>
-      <div className="flex h-60 items-center justify-center">{demo}</div>
+      <div className="flex h-32 items-center justify-center">{demo2}</div>
     </div>
   );
 }

@@ -1,13 +1,13 @@
-export default function CameraIcon({ className }: { className?: string }) {
+export default function GrantAccess({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="128"
-      height="128"
+      width="96"
+      height="96"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.7"
+      stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
     >

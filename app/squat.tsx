@@ -13,6 +13,7 @@ import React from "react";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 import Card from "./card";
 import CameraIcon from "./cameraIcon";
+import GrantAccess from "./grantAccess";
 
 export default function Squat({ nReps }: { nReps: number }) {
   // const [reps, setReps] = useState(nReps);
@@ -88,6 +89,18 @@ export default function Squat({ nReps }: { nReps: number }) {
             }
             description={""}
             demo={<CameraIcon />}
+            demo2={
+              <>
+                <a
+                  className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
+                  href={123}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p>Grant access</p>
+                </a>
+              </>
+            }
           ></Card>
           <CameraPermissionPrompt
             onPermissionGranted={handlePermissionGranted}
