@@ -61,6 +61,8 @@ export default function Squat({ nReps }: { nReps: number }) {
   return (
     <>
       <video
+        height={720}
+        width={1280}
         autoPlay
         playsInline
         muted
