@@ -9,7 +9,6 @@ import CameraPermissionPrompt from "./CameraPermissionPrompt";
 import Hold from "./hold";
 import loadModel from "./model";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import checkPermission from "./checkPermission";
 import React from "react";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 
@@ -20,8 +19,7 @@ export default function Squat({ nReps }: { nReps: number }) {
   const [model, setModel] = useState<poseDetection.PoseDetector | undefined>();
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const [webcam, setWebcam] = useState<WebcamIterator | null>(null);
-
-  // const model = useModel();
+  // const [cameraPermission, setCameraPermission] = useState();
 
   const cameraPermission = useCheckPermission();
 
@@ -34,40 +32,27 @@ export default function Squat({ nReps }: { nReps: number }) {
   }, []);
 
   useEffect(() => {
-    console.log("Cam");
     async function runLoadWebcam() {
       if (!webcamRef.current) return;
-      // if (cameraPermission !== "granted") return;
-
-      try {
-        const initializedWebcam = await tf.data.webcam(webcamRef.current);
-        setWebcam(initializedWebcam);
-      } catch (error) {
-        console.error("Error initializing webcam:", error);
+      if (cameraPermission === "granted") {
+        try {
+          const initializedWebcam = await tf.data.webcam(webcamRef.current);
+          setWebcam(initializedWebcam);
+        } catch (error) {
+          console.error("Error initializing webcam:", error);
+        }
       }
     }
     runLoadWebcam();
   }, [cameraPermission]);
 
-  // const cameraPermission = useCheckPermission();
-  const webcamEnabled = cameraPermission === "granted";
-
-  const getCameraAccess = () => {
-    return navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-    });
-  };
-
   function handleStep() {
     setStep((prevStep) => prevStep + 1);
   }
 
-  const handlePermissionGranted = () => {
-    getCameraAccess();
+  const handlePermissionGranted = async () => {
+    const initializedWebcam = await tf.data.webcam(webcamRef.current!);
+    setWebcam(initializedWebcam);
     handleStep();
   };
 
