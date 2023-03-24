@@ -68,7 +68,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         muted
         ref={webcamRef}
         className="w-full h-full object-cover fixed top-0 left-0 -scale-x-[1]"
-        hidden={step === 0}
+        // hidden={step === 0}
       />
 
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
