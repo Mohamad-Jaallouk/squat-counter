@@ -35,13 +35,10 @@ const SquatRun = ({
   webcam,
   model,
 }: WebcamProps) => {
-  console.log(webcam);
-  console.log(model);
   // const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
 
   useEffect(() => {
-    console.log("In useEffect");
     const runSquat = async () => {
       if (!webcam || !model) return; // TODO: #3 Model is a promise, so it's always truthy
       const img = await webcam.capture();
