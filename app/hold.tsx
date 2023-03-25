@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import React from "react";
-import { PoseDetector } from "@tensorflow-models/pose-detection";
-import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 
 interface WebcamProps {
   onStepChange: () => void;
@@ -15,27 +13,6 @@ interface WebcamProps {
 const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
   const [holdCount, setHoldCount] = useState(0);
 
-  // const [modelInstance, setModelInstance] =
-  //   useState<poseDetection.PoseDetector>();
-
-  // const [webcamInstance, setWebcamInstance] = useState<WebcamIterator>();
-
-  // useEffect(() => {
-  //   const loadModel = async () => {
-  //     const loadedModel = await model;
-  //     setModelInstance(loadedModel);
-  //   };
-  //   loadModel();
-  // }, [model]);
-
-  // useEffect(() => {
-  //   const loadWebcam = async () => {
-  //     const lodadedWebcam = await webcam;
-  //     setWebcamInstance(lodadedWebcam);
-  //   };
-  //   loadWebcam();
-  // }, [webcam]);
-
   useEffect(() => {
     if (!model || !webcam) return;
 
@@ -45,13 +22,8 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
       img.dispose();
       console.log(poses.length && poses[0].score);
       if (poses.length && poses[0].score! > 0.4) {
-        // console.log(poses[0].score);
         setHoldCount((prevHoldCount) => prevHoldCount + 1);
       }
-
-      // if (8000 > 2000) {
-      //   setHoldCount((prevHoldCount) => prevHoldCount + 1);
-      // }
     }, 1000);
 
     return () => clearInterval(intervalId);
@@ -66,8 +38,10 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
 
   return (
     <>
-      <div className="flex w-full flex-col items-end justify-center">
-        <h1 className="text-7xl relative text-red-200">{holdCount}</h1>
+      <div className="absolute bottom-0 left-0 right-0 mx-2 mb-14 lg:my-2  rounded-xl border border-gray-200 bg-white shadow-md">
+        <h1 className="text-7xl relative text-red-600 text-center">
+          {holdCount}
+        </h1>
       </div>
     </>
   );

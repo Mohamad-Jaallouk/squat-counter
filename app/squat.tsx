@@ -97,38 +97,13 @@ export default function Squat({ nReps }: { nReps: number }) {
                 >
                   Grant access
                 </button>
-                {/* <p>Grant access</p> */}
               </>
             }
           ></Card>
-          {/* <CameraPermissionPrompt
-            onPermissionGranted={handlePermissionGranted}
-          /> */}
         </>
       )}
-
-      {/* <div className="flex w-full flex-col items-end ">
-        <div
-          className={
-            "relative col-span-1 overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800"
-          }
-        >
-          <h1 className="text-7xl relative text-red-600">123</h1>
-        </div>
-      </div> */}
 
       {step === 1 && cameraPermission === "granted" && (
-        <>
-          <div className="absolute rounded-xl border border-gray-200 bg-white shadow-md flex flex-row items-end top-0 right-0 m-2">
-            <h1 className="text-7xl relative text-red-600">123</h1>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 mx-2 mb-14 lg:my-2  rounded-xl border border-gray-200 bg-white shadow-md">
-            <h1 className="text-7xl relative text-red-600 text-center">456</h1>
-          </div>
-        </>
-      )}
-
-      {step === 10 && cameraPermission === "granted" && (
         <Hold webcam={webcam} model={model} onStepChange={handleStep} />
       )}
 
@@ -139,8 +114,6 @@ export default function Squat({ nReps }: { nReps: number }) {
             webcam={webcam}
             model={model}
             nReps={nReps}
-            // squatCount={squatCount}
-            // setSquatCount={setSquatCount}
           />
         </>
       )}
