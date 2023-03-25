@@ -69,7 +69,7 @@ export default function Squat({ nReps }: { nReps: number }) {
 
   return (
     <>
-      <video
+      {/* <video
         height={720}
         width={1280}
         autoPlay
@@ -78,7 +78,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         ref={webcamRef}
         className="w-full h-full object-cover fixed top-0 left-0 -scale-x-[1]"
         hidden={step === 0}
-      />
+      /> */}
 
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
         <>
@@ -123,6 +123,17 @@ export default function Squat({ nReps }: { nReps: number }) {
           <h1 className="text-7xl relative text-red-600">123</h1>
         </div>
       </div> */}
+
+      {step === 1 && cameraPermission === "granted" && (
+        <>
+          <div className="absolute rounded-xl border border-gray-200 bg-white shadow-md flex flex-row items-end top-0 right-0 m-2">
+            <h1 className="text-7xl relative text-red-600">123</h1>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 m-2  rounded-xl border border-gray-200 bg-white shadow-md">
+            <h1 className="text-7xl relative text-red-600 text-center">456</h1>
+          </div>
+        </>
+      )}
 
       {step === 10 && cameraPermission === "granted" && (
         <Hold webcam={webcam} model={model} onStepChange={handleStep} />
