@@ -26,9 +26,7 @@ export default function Card({
         large ? "md:col-span-2" : ""
       }`}
     > */}
-      <div className="flex items-center justify-center pb-10 text-gray-500">
-        {demo}
-      </div>
+      <div className="flex items-center justify-center pb-10 ">{demo}</div>
 
       <div className="mx-auto max-w-md text-center">
         <h2 className="font-display text-xl md:text-3xl md:font-normal">
