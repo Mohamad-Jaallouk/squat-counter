@@ -2,8 +2,8 @@ export default function CameraIcon({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="128"
-      height="128"
+      width="256"
+      height="256"
       viewBox="0 0 24 24"
       fill="none"
       // stroke="currentColor"
@@ -24,13 +24,13 @@ export default function CameraIcon({ className }: { className?: string }) {
           id="ffflux-gradient"
         >
           <stop
-            stop-color="hsl(315, 100%, 72%)"
-            stop-opacity="1"
+            stopColor="rgb(107, 114, 128, 0.2)"
+            stopOpacity="1"
             offset="0%"
           ></stop>
           <stop
-            stop-color="hsl(260, 97%, 58%)"
-            stop-opacity="1"
+            stopColor="rgb(107, 114, 128, 0.2)"
+            stopOpacity="1"
             offset="100%"
           ></stop>
         </linearGradient>
