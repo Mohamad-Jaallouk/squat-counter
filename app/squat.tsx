@@ -69,7 +69,7 @@ export default function Squat({ nReps }: { nReps: number }) {
 
   return (
     <>
-      {/* <video
+      <video
         height={720}
         width={1280}
         autoPlay
@@ -78,7 +78,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         ref={webcamRef}
         className="w-full h-full object-cover fixed top-0 left-0 -scale-x-[1]"
         hidden={step === 0}
-      /> */}
+      />
 
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
         <>
