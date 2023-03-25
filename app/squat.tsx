@@ -122,7 +122,7 @@ export default function Squat({ nReps }: { nReps: number }) {
           <div className="absolute rounded-xl border border-gray-200 bg-white shadow-md flex flex-row items-end top-0 right-0 m-2">
             <h1 className="text-7xl relative text-red-600">123</h1>
           </div>
-          <div className="absolute bottom-0 left-0 right-0 mx-2 my-10  rounded-xl border border-gray-200 bg-white shadow-md">
+          <div className="absolute bottom-0 left-0 right-0 mx-2 mb-14 lg:my-2  rounded-xl border border-gray-200 bg-white shadow-md">
             <h1 className="text-7xl relative text-red-600 text-center">456</h1>
           </div>
         </>
