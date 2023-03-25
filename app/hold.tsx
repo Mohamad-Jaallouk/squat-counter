@@ -66,7 +66,9 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
 
   return (
     <>
-      <h1 className="text-7xl relative text-red-600">{holdCount}</h1>
+      <div className="flex w-full flex-col items-end justify-center">
+        <h1 className="text-7xl relative text-red-200">{holdCount}</h1>
+      </div>
     </>
   );
 };

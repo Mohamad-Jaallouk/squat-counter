@@ -24,13 +24,13 @@ export default function CameraIcon({ className }: { className?: string }) {
           id="ffflux-gradient"
         >
           <stop
-            stop-color="hsl(315, 100%, 72%)"
-            stop-opacity="1"
+            stopColor="hsl(315, 100%, 72%)"
+            stopOpacity="1"
             offset="0%"
           ></stop>
           <stop
-            stop-color="hsl(260, 97%, 80%)"
-            stop-opacity="1"
+            stopColor="hsl(260, 97%, 80%)"
+            stopOpacity="1"
             offset="100%"
           ></stop>
         </linearGradient>

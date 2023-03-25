@@ -64,7 +64,15 @@ function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
 
   return (
     <>
-      <h1 className="text-7xl relative text-red-600">{squatCount}</h1>
+      <div className="flex w-full flex-col items-end justify-center">
+        <div
+          className={
+            "relative col-span-1 overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800"
+          }
+        >
+          <h1 className="text-7xl relative text-red-600">{squatCount}</h1>
+        </div>
+      </div>
     </>
   );
 }
