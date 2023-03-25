@@ -114,7 +114,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         </>
       )}
 
-      <div className="flex w-full flex-col items-end ">
+      {/* <div className="flex w-full flex-col items-end ">
         <div
           className={
             "relative col-span-1 overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800"
@@ -122,7 +122,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         >
           <h1 className="text-7xl relative text-red-600">123</h1>
         </div>
-      </div>
+      </div> */}
 
       {step === 10 && cameraPermission === "granted" && (
         <Hold webcam={webcam} model={model} onStepChange={handleStep} />
