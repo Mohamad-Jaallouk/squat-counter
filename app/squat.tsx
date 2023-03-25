@@ -69,7 +69,9 @@ export default function Squat({ nReps }: { nReps: number }) {
 
   return (
     <>
-      <video
+      <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
+      <main className="flex w-full flex-col items-center justify-center py-32">
+        {/* <video
         height={720}
         width={1280}
         autoPlay
@@ -78,52 +80,60 @@ export default function Squat({ nReps }: { nReps: number }) {
         ref={webcamRef}
         className="w-full h-full object-cover fixed top-0 left-0 -scale-x-[1]"
         // hidden={step === 0}
-      />
+      /> */}
 
-      {step === 0 && cameraPermission && cameraPermission !== "granted" && (
-        <>
-          <Card
-            large={true}
-            title={
-              "We need access to your camera. Would you like to grant access?"
-            }
-            description={""}
-            demo={<CameraIcon />}
-            demo2={
-              <>
-                <a
+        {step === 0 && cameraPermission && cameraPermission !== "granted" && (
+          <>
+            <Card
+              large={true}
+              title={
+                "We need access to your camera. Would you like to grant access?"
+              }
+              description={""}
+              demo={<CameraIcon />}
+              demo2={
+                <>
+                  {/* <a
                   className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
                   // href={123}
                   target="_blank"
+                  onClick={handlePermissionGranted}
                   rel="noopener noreferrer"
-                >
-                  <p>Grant access</p>
-                </a>
-              </>
-            }
-          ></Card>
-          <CameraPermissionPrompt
+                ></a> */}
+                  <button
+                    className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
+                    onClick={handlePermissionGranted}
+                  >
+                    Grant access
+                  </button>
+                  {/* <p>Grant access</p> */}
+                </>
+              }
+            ></Card>
+            {/* <CameraPermissionPrompt
             onPermissionGranted={handlePermissionGranted}
-          />
-        </>
-      )}
+          /> */}
+          </>
+        )}
 
-      {step === 1 && (
-        <Hold webcam={webcam} model={model} onStepChange={handleStep} />
-      )}
+        {step === 1 && (
+          <Hold webcam={webcam} model={model} onStepChange={handleStep} />
+        )}
 
-      {step === 2 && cameraPermission === "granted" && (
-        <>
-          <SquatRun
-            onStepChange={handleStep}
-            webcam={webcam}
-            model={model}
-            nReps={nReps}
-            // squatCount={squatCount}
-            // setSquatCount={setSquatCount}
-          />
-        </>
-      )}
+        {step === 2 && cameraPermission === "granted" && (
+          <>
+            <SquatRun
+              onStepChange={handleStep}
+              webcam={webcam}
+              model={model}
+              nReps={nReps}
+              // squatCount={squatCount}
+              // setSquatCount={setSquatCount}
+            />
+          </>
+        )}
+      </main>
+      <div />
     </>
   );
 }
