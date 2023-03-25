@@ -29,7 +29,7 @@ export default function CameraIcon({ className }: { className?: string }) {
             offset="0%"
           ></stop>
           <stop
-            stop-color="hsl(227, 100%, 50%)"
+            stop-color="hsl(260, 97%, 58%)"
             stop-opacity="1"
             offset="100%"
           ></stop>
