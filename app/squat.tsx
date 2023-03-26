@@ -68,6 +68,16 @@ export default function Squat({ nReps }: { nReps: number }) {
 
   console.log("render", Math.random());
 
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
     <>
       <video
@@ -83,7 +93,7 @@ export default function Squat({ nReps }: { nReps: number }) {
 
       {!cameraPermission && (
         <>
-          <motion.svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -96,7 +106,7 @@ export default function Squat({ nReps }: { nReps: number }) {
             className="animate-spin w-12 h-12 text-gray-500"
           >
             <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </motion.svg>
+          </svg>
         </>
       )}
 
@@ -126,18 +136,20 @@ export default function Squat({ nReps }: { nReps: number }) {
       )}
 
       {step === 1 && cameraPermission === "granted" && (
-        <Hold webcam={webcam} model={model} onStepChange={handleStep} />
+        <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+          <Hold webcam={webcam} model={model} onStepChange={handleStep} />
+        </motion.div>
       )}
 
       {step === 2 && cameraPermission === "granted" && (
-        <>
+        <motion.div initial="hidden" animate="visible" variants={fadeIn}>
           <SquatRun
             onStepChange={handleStep}
             webcam={webcam}
             model={model}
             nReps={nReps}
           />
-        </>
+        </motion.div>
       )}
     </>
   );
