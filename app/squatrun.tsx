@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { calculateAngle, convertToDegrees, landMark } from "./appl";
+import { Line, Circle } from "rc-progress";
 
 function _squat(landMarks: any, prev: any, setSquatCount: any) {
   let kneeAngleRadians = calculateAngle(
@@ -64,8 +65,18 @@ function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
 
   return (
     <>
-      <div className="absolute rounded-xl border border-gray-200 bg-white shadow-md flex flex-row items-end top-0 right-0 m-2">
-        <h1 className="text-7xl relative text-red-600">{squatCount}</h1>
+      <div className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-end top-0 right-0 m-2 w-36 p-2">
+        {/* <h1 className="text-7xl relative text-red-600">{holdCount}</h1> */}
+        <span className="absolute flex items-center justify-center">
+          TEXT squat
+        </span>
+        <Circle
+          percent={squatCount * 20}
+          strokeWidth={8}
+          strokeColor="#22c55e"
+          trailWidth={4}
+          trailColor="#dcfce7"
+        />
       </div>
     </>
   );
