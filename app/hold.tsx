@@ -54,6 +54,16 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
     },
   };
 
+  const instructionVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 1,
+      },
+    },
+  };
+
   return (
     <>
       <div className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-center justify-center top-0 right-0 m-2 w-36 p-2">
@@ -87,6 +97,17 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
           trailColor="#dcfce7"
         />
       </div>
+
+      <motion.div
+        initial="visible"
+        animate={holdCount === 5 ? "hidden" : "visible"}
+        variants={instructionVariants}
+        className="absolute rounded-xl bg-white bg-opacity-30 shadow-md flex flex-row items-center justify-center bottom-0 left-0 right-0 m-2 p-2 my-16 lg:my-2"
+      >
+        <span className="text-xl text-white font-bold">
+          Stand in front of the camera
+        </span>
+      </motion.div>
     </>
   );
 };
