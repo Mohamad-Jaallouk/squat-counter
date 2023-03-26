@@ -102,7 +102,7 @@ const Hold = ({ onStepChange, webcam, model }: WebcamProps) => {
         initial="visible"
         animate={holdCount === 5 ? "hidden" : "visible"}
         variants={instructionVariants}
-        className="absolute rounded-xl bg-white bg-opacity-30 shadow-md flex flex-row items-center justify-center bottom-0 left-0 right-0 m-2 p-2 my-16 lg:my-2"
+        className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-center justify-center bottom-0 left-0 right-0 m-2 p-2 my-16 lg:my-2"
       >
         <span className="text-xl text-white font-bold">
           Stand in front of the camera
