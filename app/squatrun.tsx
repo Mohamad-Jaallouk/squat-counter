@@ -65,16 +65,18 @@ function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
 
   return (
     <>
-      <div className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-end top-0 right-0 m-2 w-36 p-2">
-        {/* <h1 className="text-7xl relative text-red-600">{holdCount}</h1> */}
-        <span className="absolute flex items-center justify-center">
-          TEXT squat
+      <div className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-center justify-center top-0 right-0 m-2 w-36 p-2">
+        <span className="absolute text-7xl text-white font-bold">
+          {squatCount}
         </span>
         <Circle
           percent={squatCount * 20}
-          strokeWidth={8}
+          gapDegree={70}
+          gapPosition="bottom"
+          strokeWidth={6}
+          trailWidth={6}
+          strokeLinecap="round"
           strokeColor="#22c55e"
-          trailWidth={4}
           trailColor="#dcfce7"
         />
       </div>

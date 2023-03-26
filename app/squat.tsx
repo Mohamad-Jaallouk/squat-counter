@@ -14,6 +14,7 @@ import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iter
 import Card from "./card";
 import CameraIcon from "./cameraIcon";
 import GrantAccess from "./grantAccess";
+import { motion } from "framer-motion";
 
 export default function Squat({ nReps }: { nReps: number }) {
   // const [reps, setReps] = useState(nReps);
@@ -80,26 +81,47 @@ export default function Squat({ nReps }: { nReps: number }) {
         hidden={step === 0}
       />
 
+      {!cameraPermission && (
+        <>
+          <motion.svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="animate-spin w-12 h-12 text-gray-500"
+          >
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </motion.svg>
+        </>
+      )}
+
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
         <>
-          <Card
-            large={true}
-            title={
-              "We need access to your camera. Would you like to grant access?"
-            }
-            description={""}
-            demo={<CameraIcon />}
-            demo2={
-              <>
-                <button
-                  className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
-                  onClick={handlePermissionGranted}
-                >
-                  Grant access
-                </button>
-              </>
-            }
-          ></Card>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <Card
+              large={true}
+              title={
+                "We need access to your camera. Would you like to grant access?"
+              }
+              description={""}
+              demo={<CameraIcon />}
+              demo2={
+                <>
+                  <button
+                    className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
+                    onClick={handlePermissionGranted}
+                  >
+                    Grant access
+                  </button>
+                </>
+              }
+            ></Card>
+          </motion.div>
         </>
       )}
 
