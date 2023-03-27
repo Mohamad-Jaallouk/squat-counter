@@ -1,61 +1,58 @@
 "use client";
 
-import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-cpu";
-import { useState, useRef, useEffect } from "react";
-import useCheckPermission from "./hooks/useCheckPermission";
-import SquatRun from "./squatrun";
-import StandUpCheck from "./standUpCheck";
-import React from "react";
-import Card2 from "./card2";
-import CameraIcon from "./icons/camera";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import LoadingSpinner from "./icons/loading-spinner";
-import { useModel } from "./hooks/usemodel";
+import useCheckPermission from "./hooks/useCheckPermission";
 import useWebcam from "./hooks/useWebcam";
+import useSquat from "./useSquat";
+import StandUpCheck from "./standUpCheck";
+import SquatRun from "./squatrun";
+import CardGrantAccess from "./components/cardGrantAccess";
+import CameraIcon from "./icons/camera";
+import LoadingSpinner from "./icons/loading-spinner";
+import useModel from "./hooks/usemodel";
+
+const videoConfig = {
+  height: 720,
+  width: 1280,
+  facingMode: "user",
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
 export default function Squat({ nReps }: { nReps: number }) {
-  const [step, setStep] = useState(0);
   const webcamRef = useRef<HTMLVideoElement | null>(null);
+  const [step, setStep] = useState(0);
 
   const cameraPermission = useCheckPermission();
   const model = useModel();
   const webcam = useWebcam(webcamRef, cameraPermission);
 
-  if (step === 0 && cameraPermission === "granted") {
-    setStep(1);
-  }
-
   const handleStep = () => setStep((prevStep) => prevStep + 1);
+
+  if (step === 0 && cameraPermission === "granted") {
+    handleStep();
+  }
 
   const handlePermissionGranted = async () => {
     handleStep();
-    await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: 1280,
-        height: 720,
-      },
-    });
+    await navigator.mediaDevices.getUserMedia({ video: videoConfig });
   };
 
   console.log("render", Math.random());
 
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
   return (
     <>
       <video
-        height={720}
-        width={1280}
+        {...videoConfig}
         autoPlay
         playsInline
         muted
@@ -73,24 +70,15 @@ export default function Squat({ nReps }: { nReps: number }) {
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Card2
-              large={true}
+            <CardGrantAccess
               title={
                 "We need access to your camera. Would you like to grant access?"
               }
-              description={""}
-              demo={<CameraIcon />}
-              demo2={
-                <>
-                  <button
-                    className="text-l group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 font-bold text-white transition-colors hover:bg-white hover:text-black"
-                    onClick={handlePermissionGranted}
-                  >
-                    Grant access
-                  </button>
-                </>
+              icon={<CameraIcon />}
+              button={
+                <button onClick={handlePermissionGranted}>Grant access</button>
               }
-            ></Card2>
+            ></CardGrantAccess>
           </motion.div>
         </>
       )}

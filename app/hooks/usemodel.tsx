@@ -16,7 +16,7 @@ async function loadModel() {
   return detector;
 }
 
-export function useModel() {
+export default function useModel() {
   const [model, setModel] = useState<poseDetection.PoseDetector | null>(null);
 
   useEffect(() => {
