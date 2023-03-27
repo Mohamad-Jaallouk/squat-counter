@@ -15,10 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100 flex items-center justify-center">
+        <div className="fixed flex h-screen w-full items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-cyan-100">
           {/* <main className="flex w-full flex-col items-center justify-center"> */}
           {children}
-          {/* </main> */}
         </div>
       </body>
       <Analytics />

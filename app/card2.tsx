@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 // import ReactMarkdown from "react-markdown";
 import Balancer from "react-wrap-balancer";
 
-export default function Card({
+export default function Card2({
   title,
   description,
   demo,
@@ -16,7 +16,7 @@ export default function Card({
   large?: boolean;
 }) {
   return (
-    <div className="relative flex flex-col justify-start items-center">
+    <div className="relative flex flex-col items-center justify-start">
       {/* <div className="flex items-center justify-center pb-10 ">{demo}</div> */}
       <div className="pb-10">{demo}</div>
 

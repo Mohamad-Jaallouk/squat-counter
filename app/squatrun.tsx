@@ -1,9 +1,9 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { calculateAngle, convertToDegrees, landMark } from "./appl";
 import { Line, Circle } from "rc-progress";
+import CardTopRight from "./components/cardTopRight";
+import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 
 function _squat(landMarks: any, prev: any, setSquatCount: any) {
   let kneeAngleRadians = calculateAngle(
@@ -20,16 +20,19 @@ function _squat(landMarks: any, prev: any, setSquatCount: any) {
   }
 }
 
-interface WebcamProps {
-  // squatCount: number;
-  // setSquatCount: React.Dispatch<React.SetStateAction<number>>;
+interface SquatRunProps {
   onStepChange: () => void;
-  webcam: any;
-  model: poseDetection.PoseDetector | undefined;
+  webcam: WebcamIterator | null;
+  model: poseDetection.PoseDetector | null;
   nReps: number;
 }
 
-function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
+export default function SquatRun({
+  onStepChange,
+  webcam,
+  model,
+  nReps,
+}: SquatRunProps) {
   const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
   const score = useRef(0);
@@ -51,11 +54,7 @@ function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
       requestAnimationFrame(runSquat);
     };
 
-    console.log("Before runSquat");
-    console.log(webcam);
-    console.log(model);
     requestAnimationFrame(runSquat);
-    console.log("After runSquat");
   }, [webcam, model, setSquatCount]);
 
   useEffect(() => {
@@ -67,24 +66,10 @@ function SquatRun({ onStepChange, webcam, model, nReps }: WebcamProps) {
 
   return (
     <>
-      <div className="absolute rounded-xl bg-black bg-opacity-30 shadow-md flex flex-row items-center justify-center top-0 right-0 m-2 w-36 p-2">
-        <span className="absolute text-7xl text-white font-bold">
-          {Number(score.current.toFixed(2)) * 100}
-          {/* {squatCount} */}
-        </span>
-        <Circle
-          percent={squatCount * 20}
-          gapDegree={70}
-          gapPosition="bottom"
-          strokeWidth={6}
-          trailWidth={6}
-          strokeLinecap="round"
-          strokeColor="#22c55e"
-          trailColor="#dcfce7"
-        />
-      </div>
+      <CardTopRight
+        progressBar={<Circle percent={squatCount * 20} />}
+        progressAction={Number(score.current.toFixed(2)) * 100}
+      />
     </>
   );
 }
-
-export default SquatRun;

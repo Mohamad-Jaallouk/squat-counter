@@ -3,72 +3,33 @@
 import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-cpu";
 import { useState, useRef, useEffect } from "react";
-import useCheckPermission from "./draft/useCheckPermission";
+import useCheckPermission from "./hooks/useCheckPermission";
 import SquatRun from "./squatrun";
-import Hold from "./hold";
-import loadModel from "./model";
-import * as poseDetection from "@tensorflow-models/pose-detection";
+import StandUpCheck from "./standUpCheck";
 import React from "react";
-import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
-import Card from "./card";
-import CameraIcon from "./cameraIcon";
+import Card2 from "./card2";
+import CameraIcon from "./icons/camera";
 import { motion } from "framer-motion";
 import LoadingSpinner from "./icons/loading-spinner";
-import { useModel } from "./usemodel";
-import useWebcam from "./useWebcam";
+import { useModel } from "./hooks/usemodel";
+import useWebcam from "./hooks/useWebcam";
 
 export default function Squat({ nReps }: { nReps: number }) {
-  // const [reps, setReps] = useState(nReps);
-  const [reps, setReps] = useState(5);
-  // const [squatCount, setSquatCount] = useState(0);
   const [step, setStep] = useState(0);
-  // const [model, setModel] = useState<poseDetection.PoseDetector>();
   const webcamRef = useRef<HTMLVideoElement | null>(null);
-  // const [webcam, setWebcam] = useState<WebcamIterator | null>(null);
-
-  const model = useModel();
 
   const cameraPermission = useCheckPermission();
-
+  const model = useModel();
   const webcam = useWebcam(webcamRef, cameraPermission);
 
-  useEffect(() => {
-    if (step === 0 && cameraPermission === "granted") {
-      setStep(1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cameraPermission]);
-
-  // useEffect(() => {
-  //   const initModel = async () => {
-  //     const modelInstance = await loadModel();
-  //     setModel(modelInstance);
-  //   };
-  //   initModel();
-  // }, []);
-
-  // useEffect(() => {
-  //   const initWebcam = async () => {
-  //     if (!webcamRef.current) return;
-  //     if (cameraPermission === "granted") {
-  //       try {
-  //         const initializedWebcam = await tf.data.webcam(webcamRef.current);
-  //         setWebcam(initializedWebcam);
-  //       } catch (error) {
-  //         console.error("Error initializing webcam:", error);
-  //       }
-  //     }
-  //   };
-  //   initWebcam();
-  // }, [cameraPermission]);
+  if (step === 0 && cameraPermission === "granted") {
+    setStep(1);
+  }
 
   const handleStep = () => setStep((prevStep) => prevStep + 1);
 
   const handlePermissionGranted = async () => {
     handleStep();
-    // const initializedWebcam = await tf.data.webcam(webcamRef.current!);
-    // setWebcam(initializedWebcam);
-    // const webcam = useWebcam(webcamRef, cameraPermission);
     await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: "user",
@@ -99,20 +60,20 @@ export default function Squat({ nReps }: { nReps: number }) {
         playsInline
         muted
         ref={webcamRef}
-        className="w-full h-full object-cover fixed top-0 left-0 -scale-x-[1]"
+        className="fixed top-0 left-0 h-full w-full -scale-x-[1] object-cover"
         hidden={step === 0}
       />
 
       {!cameraPermission && (
         <>
-          <LoadingSpinner className="animate-spin w-12 h-12 text-gray-500" />
+          <LoadingSpinner className="h-12 w-12 animate-spin text-gray-500" />
         </>
       )}
 
       {step === 0 && cameraPermission && cameraPermission !== "granted" && (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Card
+            <Card2
               large={true}
               title={
                 "We need access to your camera. Would you like to grant access?"
@@ -122,21 +83,25 @@ export default function Squat({ nReps }: { nReps: number }) {
               demo2={
                 <>
                   <button
-                    className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-l text-white transition-colors hover:bg-white hover:text-black font-bold"
+                    className="text-l group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 font-bold text-white transition-colors hover:bg-white hover:text-black"
                     onClick={handlePermissionGranted}
                   >
                     Grant access
                   </button>
                 </>
               }
-            ></Card>
+            ></Card2>
           </motion.div>
         </>
       )}
 
       {step === 1 && cameraPermission === "granted" && (
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-          <Hold webcam={webcam} model={model} onStepChange={handleStep} />
+          <StandUpCheck
+            webcam={webcam}
+            model={model}
+            onStepChange={handleStep}
+          />
         </motion.div>
       )}
 
