@@ -70,7 +70,7 @@ export default function SquatRun({
   return (
     <>
       <CardTopRight
-        progressBar={<Circle percent={angle} />}
+        progressBar={<Circle percent={angle} gap={true} />}
         progressAction={angle.toFixed(0)}
       />
     </>

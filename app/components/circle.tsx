@@ -7,6 +7,7 @@ export default function Circle({
   strokeLinecap = "round",
   strokeColor = "#22c55e",
   trailColor = "#dcfce7",
+  gap = false,
 }: {
   percent: number;
   strokeWidth?: number;
@@ -14,6 +15,7 @@ export default function Circle({
   strokeLinecap?: string;
   strokeColor?: string;
   trailColor?: string;
+  gap?: boolean;
 }) {
   return (
     <Circle2
@@ -23,6 +25,8 @@ export default function Circle({
       strokeLinecap="round"
       strokeColor="#22c55e"
       trailColor="#dcfce7"
+      gapDegree={gap ? 70 : 0}
+      gapPosition="bottom"
     />
   );
 }
