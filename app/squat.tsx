@@ -2,10 +2,9 @@
 
 import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-cpu";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import useCheckPermission from "./draft/useCheckPermission";
 import SquatRun from "./squatrun";
-import CameraPermissionPrompt from "./CameraPermissionPrompt";
 import Hold from "./hold";
 import loadModel from "./model";
 import * as poseDetection from "@tensorflow-models/pose-detection";
@@ -13,20 +12,25 @@ import React from "react";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 import Card from "./card";
 import CameraIcon from "./cameraIcon";
-import GrantAccess from "./grantAccess";
 import { motion } from "framer-motion";
+import LoadingSpinner from "./icons/loading-spinner";
+import { useModel } from "./usemodel";
+import useWebcam from "./useWebcam";
 
 export default function Squat({ nReps }: { nReps: number }) {
   // const [reps, setReps] = useState(nReps);
   const [reps, setReps] = useState(5);
   // const [squatCount, setSquatCount] = useState(0);
   const [step, setStep] = useState(0);
-  const [model, setModel] = useState<poseDetection.PoseDetector>();
+  // const [model, setModel] = useState<poseDetection.PoseDetector>();
   const webcamRef = useRef<HTMLVideoElement | null>(null);
-  const [webcam, setWebcam] = useState<WebcamIterator | null>(null);
-  // const [cameraPermission, setCameraPermission] = useState();
+  // const [webcam, setWebcam] = useState<WebcamIterator | null>(null);
+
+  const model = useModel();
 
   const cameraPermission = useCheckPermission();
+
+  const webcam = useWebcam(webcamRef, cameraPermission);
 
   useEffect(() => {
     if (step === 0 && cameraPermission === "granted") {
@@ -35,35 +39,43 @@ export default function Squat({ nReps }: { nReps: number }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cameraPermission]);
 
-  useEffect(() => {
-    const initModel = async () => {
-      const modelInstance = await loadModel();
-      setModel(modelInstance);
-    };
-    initModel();
-  }, []);
+  // useEffect(() => {
+  //   const initModel = async () => {
+  //     const modelInstance = await loadModel();
+  //     setModel(modelInstance);
+  //   };
+  //   initModel();
+  // }, []);
 
-  useEffect(() => {
-    const initWebcam = async () => {
-      if (!webcamRef.current) return;
-      if (cameraPermission === "granted") {
-        try {
-          const initializedWebcam = await tf.data.webcam(webcamRef.current);
-          setWebcam(initializedWebcam);
-        } catch (error) {
-          console.error("Error initializing webcam:", error);
-        }
-      }
-    };
-    initWebcam();
-  }, [cameraPermission]);
+  // useEffect(() => {
+  //   const initWebcam = async () => {
+  //     if (!webcamRef.current) return;
+  //     if (cameraPermission === "granted") {
+  //       try {
+  //         const initializedWebcam = await tf.data.webcam(webcamRef.current);
+  //         setWebcam(initializedWebcam);
+  //       } catch (error) {
+  //         console.error("Error initializing webcam:", error);
+  //       }
+  //     }
+  //   };
+  //   initWebcam();
+  // }, [cameraPermission]);
 
   const handleStep = () => setStep((prevStep) => prevStep + 1);
 
   const handlePermissionGranted = async () => {
     handleStep();
-    const initializedWebcam = await tf.data.webcam(webcamRef.current!);
-    setWebcam(initializedWebcam);
+    // const initializedWebcam = await tf.data.webcam(webcamRef.current!);
+    // setWebcam(initializedWebcam);
+    // const webcam = useWebcam(webcamRef, cameraPermission);
+    await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: 1280,
+        height: 720,
+      },
+    });
   };
 
   console.log("render", Math.random());
@@ -93,20 +105,7 @@ export default function Squat({ nReps }: { nReps: number }) {
 
       {!cameraPermission && (
         <>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="animate-spin w-12 h-12 text-gray-500"
-          >
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
+          <LoadingSpinner className="animate-spin w-12 h-12 text-gray-500" />
         </>
       )}
 
