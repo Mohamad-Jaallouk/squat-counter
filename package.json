@@ -22,9 +22,7 @@
     "next": "13.2.4",
     "rc-progress": "^3.4.1",
     "react": "18.2.0",
-    "react-circular-progressbar": "^2.1.0",
     "react-dom": "18.2.0",
-    "react-markdown": "^8.0.6",
     "react-wrap-balancer": "^0.4.0",
     "typescript": "5.0.2"
   },
