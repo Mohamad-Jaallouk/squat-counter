@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { calculateAngle, convertToDegrees, landMark } from "./appl";
-import { Line, Circle } from "rc-progress";
 import CardTopRight from "./components/cardTopRight";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import Circle from "./components/circle";
 
-function _squat(landMarks: any, prev: any, setSquatCount: any) {
+function _squat(landMarks: any, prev: any, setSquatCount: any, setAngle: any) {
   let kneeAngleRadians = calculateAngle(
     landMarks[landMark.RightHip],
     landMarks[landMark.RightKnee],
     landMarks[landMark.RightAnkle]
   );
   let kneeAngleDegree = convertToDegrees(kneeAngleRadians);
+  setAngle(kneeAngleDegree);
+
   if (kneeAngleDegree < 90 && prev.current === "standing") {
     setSquatCount((c: number) => c + 1);
     prev.current = "squatting";
@@ -38,6 +40,7 @@ export default function SquatRun({
   const score = useRef(0);
   console.log("nReps", nReps);
   console.log("squatCount", squatCount);
+  const [angle, setAngle] = useState(0);
 
   useEffect(() => {
     const runSquat = async () => {
@@ -48,7 +51,7 @@ export default function SquatRun({
       if (poses.length > 0 && poses[0].score! > 0.5) {
         score.current = poses[0].score!;
         const landMarks = poses[0].keypoints;
-        _squat(landMarks, prev, setSquatCount);
+        _squat(landMarks, prev, setSquatCount, setAngle);
       }
 
       requestAnimationFrame(runSquat);
@@ -67,8 +70,8 @@ export default function SquatRun({
   return (
     <>
       <CardTopRight
-        progressBar={<Circle percent={squatCount * 20} />}
-        progressAction={Number(score.current.toFixed(2)) * 100}
+        progressBar={<Circle percent={angle} />}
+        progressAction={angle.toFixed(0)}
       />
     </>
   );
