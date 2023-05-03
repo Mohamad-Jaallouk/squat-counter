@@ -1,11 +1,10 @@
-// useCameraPermission.ts
 import { useState, useEffect } from "react";
 
-type PermissionStatusState = "unknown" | "granted" | "denied" | "prompt";
+type PermissionStatusState = null | "granted" | "denied" | "prompt";
 
-const useCameraPermission = (): PermissionStatusState => {
+const useCheckPermission = (): PermissionStatusState => {
   const [permissionStatus, setPermissionStatus] =
-    useState<PermissionStatusState>("unknown");
+    useState<PermissionStatusState | null>(null);
 
   useEffect(() => {
     const checkPermission = async () => {
@@ -38,4 +37,4 @@ const useCameraPermission = (): PermissionStatusState => {
   return permissionStatus;
 };
 
-export default useCameraPermission;
+export default useCheckPermission;

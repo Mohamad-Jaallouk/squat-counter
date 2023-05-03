@@ -1,19 +1,19 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { calculateAngle, convertToDegrees, landMark } from "./appl";
-import React, { RefObject } from "react";
-import { PoseDetector } from "@tensorflow-models/pose-detection";
-// import { Box, Card, CardContent, Typography } from "@mui/material";
+import CardTopRight from "./components/cardTopRight";
+import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import Circle from "./components/circle";
 
-function _squat(landMarks: any, prev: any, setSquatCount: any) {
+function _squat(landMarks: any, prev: any, setSquatCount: any, setAngle: any) {
   let kneeAngleRadians = calculateAngle(
     landMarks[landMark.RightHip],
     landMarks[landMark.RightKnee],
     landMarks[landMark.RightAnkle]
   );
   let kneeAngleDegree = convertToDegrees(kneeAngleRadians);
+  setAngle(kneeAngleDegree);
+
   if (kneeAngleDegree < 90 && prev.current === "standing") {
     setSquatCount((c: number) => c + 1);
     prev.current = "squatting";
@@ -22,45 +22,57 @@ function _squat(landMarks: any, prev: any, setSquatCount: any) {
   }
 }
 
-interface WebcamProps {
-  squatCount: number;
-  setSquatCount: React.Dispatch<React.SetStateAction<number>>;
-  webcam: any;
-  model: Promise<PoseDetector | undefined>;
+interface SquatRunProps {
+  onStepChange: () => void;
+  webcam: WebcamIterator | null;
+  model: poseDetection.PoseDetector | null;
+  nReps: number;
 }
 
-const SquatRun = ({
-  squatCount,
-  setSquatCount,
+export default function SquatRun({
+  onStepChange,
   webcam,
   model,
-}: WebcamProps) => {
-  console.log(webcam);
-  console.log(model);
-  // const [squatCount, setSquatCount] = useState(0);
+  nReps,
+}: SquatRunProps) {
+  const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
+  const score = useRef(0);
+  console.log("nReps", nReps);
+  console.log("squatCount", squatCount);
+  const [angle, setAngle] = useState(0);
 
   useEffect(() => {
-    console.log("In useEffect");
     const runSquat = async () => {
-      if (!webcam || !model) return; // TODO: #3 Model is a promise, so it's always truthy
+      if (!webcam || !model) return;
       const img = await webcam.capture();
-      const poses = await model.then((m) => m!.estimatePoses(img));
+      const poses = await model.estimatePoses(img);
       img.dispose();
       if (poses.length > 0 && poses[0].score! > 0.5) {
+        score.current = poses[0].score!;
         const landMarks = poses[0].keypoints;
-        _squat(landMarks, prev, setSquatCount);
+        _squat(landMarks, prev, setSquatCount, setAngle);
       }
 
       requestAnimationFrame(runSquat);
     };
 
-    console.log("Before runSquat");
     requestAnimationFrame(runSquat);
-    console.log("After runSquat");
   }, [webcam, model, setSquatCount]);
 
-  return <>{squatCount}</>;
-};
+  useEffect(() => {
+    if (squatCount === nReps) {
+      onStepChange();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [squatCount]);
 
-export default SquatRun;
+  return (
+    <>
+      <CardTopRight
+        progressBar={<Circle percent={angle} gap={true} />}
+        progressAction={angle.toFixed(0)}
+      />
+    </>
+  );
+}
