@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import useCheckPermission from "./hooks/useCheckPermission";
 import useWebcam from "./hooks/useWebcam";
-import useSquat from "./useSquat";
+// import useSquat from "./useSquat";
 import StandUpCheck from "./standUpCheck";
 import SquatRun from "./squatrun";
 import CardGrantAccess from "./components/cardGrantAccess";
