@@ -71,10 +71,10 @@ export default function Squat() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Reps
             title={"How many squat reps would you like to perform?"}
-            button1={<button onClick={() => handleReps(10)}>10</button>}
-            button2={<button onClick={() => handleReps(20)}>20</button>}
-            button3={<button onClick={() => handleReps(50)}>50</button>}
-            button4={<button onClick={() => handleReps(100)}>100</button>}
+            button1={<button onClick={() => handleReps(5)}>5</button>}
+            button2={<button onClick={() => handleReps(10)}>10</button>}
+            button3={<button onClick={() => handleReps(25)}>25</button>}
+            button4={<button onClick={() => handleReps(50)}>50</button>}
           ></Reps>
         </motion.div>
       )}

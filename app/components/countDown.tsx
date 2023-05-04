@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const Countdown = ({ onStepChange }: any) => {
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(3);
 
   useEffect(() => {
     const timer = setInterval(() => {
