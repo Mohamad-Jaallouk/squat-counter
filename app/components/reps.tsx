@@ -20,7 +20,7 @@ export default function Reps({
       <div className="pb-10">
         <GymIcon />
       </div>
-      <h2 className="font-display mb-10 text-3xl md:text-4xl md:font-normal">
+      <h2 className="font-display mb-10 text-center text-3xl md:text-4xl md:font-normal">
         <Balancer>{title}</Balancer>
       </h2>
 
@@ -32,7 +32,9 @@ export default function Reps({
         <div className="group m-3 flex h-[100px] w-[100px] items-center justify-center space-x-2 rounded-full border border-black bg-black text-5xl font-bold text-white transition-colors hover:bg-white hover:text-black">
           {button2}
         </div>
+      </div>
 
+      <div className="flex flex-row items-center justify-start">
         <div className="group m-3 flex h-[100px] w-[100px] items-center justify-center space-x-2 rounded-full border border-black bg-black text-5xl font-bold text-white transition-colors hover:bg-white hover:text-black">
           {button3}
         </div>
