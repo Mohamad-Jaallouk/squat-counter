@@ -1,9 +1,4 @@
-interface KeyPoint {
-  x: number;
-  y: number;
-  score: number;
-  name: string;
-}
+import * as poseDetection from "@tensorflow-models/pose-detection";
 
 /**
  * Convert from radians to degrees.
@@ -16,9 +11,9 @@ export function convertToDegrees(radians: number): number {
  * Calculates the angle between 3 points in 2D space.
  */
 export function calculateAngle(
-  upper: KeyPoint,
-  middle: KeyPoint,
-  lower: KeyPoint
+  upper: poseDetection.Keypoint,
+  middle: poseDetection.Keypoint,
+  lower: poseDetection.Keypoint
 ): number {
   const middleToLower = Math.atan2(lower.y - middle.y, lower.x - middle.x);
   const upperToMiddle = Math.atan2(upper.y - middle.y, upper.x - middle.x);
@@ -49,4 +44,3 @@ export enum landMark {
   LeftAnkle,
   RightAnkle,
 }
-

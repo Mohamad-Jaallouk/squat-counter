@@ -6,6 +6,7 @@ import CardTopRight from "./components/cardTopRight";
 import OkCheck from "./icons/okCheck";
 import Circle from "./components/circle";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import { landMark } from "./appl";
 
 interface StandUpCheckProps {
   onStepChange: () => void;
@@ -28,8 +29,15 @@ export default function StandUpCheck({
       const img = await webcam.capture();
       const poses = await model.estimatePoses(img);
       img.dispose();
-      console.log(poses.length && poses[0].score);
-      if (poses.length && poses[0].score! > 0.4) {
+
+      if (poses.length === 0) return;
+      const landMarks: poseDetection.Keypoint[] = poses[0].keypoints!;
+      if (
+        landMarks[landMark.RightShoulder].score! > 0.6 &&
+        landMarks[landMark.RightHip].score! > 0.6 &&
+        landMarks[landMark.RightKnee].score! > 0.6 &&
+        landMarks[landMark.RightAnkle].score! > 0.6
+      ) {
         setHoldCount((prevHoldCount) => prevHoldCount + 1);
       }
     }, 1000);
