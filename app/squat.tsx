@@ -4,13 +4,15 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import useCheckPermission from "./hooks/useCheckPermission";
 import useWebcam from "./hooks/useWebcam";
-// import useSquat from "./useSquat";
 import StandUpCheck from "./standUpCheck";
 import SquatRun from "./squatrun";
 import CardGrantAccess from "./components/cardGrantAccess";
 import CameraIcon from "./icons/camera";
 import LoadingSpinner from "./icons/loading-spinner";
 import useModel from "./hooks/usemodel";
+import Reps from "./components/reps";
+import Countdown from "./components/countDown";
+import Confetti from "react-confetti";
 
 const videoConfig = {
   height: 720,
@@ -23,14 +25,15 @@ const fadeIn = {
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.5,
+      duration: 1,
     },
   },
 };
 
-export default function Squat({ nReps }: { nReps: number }) {
+export default function Squat() {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const [step, setStep] = useState(0);
+  const [reps, setReps] = useState(0);
 
   const cameraPermission = useCheckPermission();
   const model = useModel();
@@ -38,7 +41,7 @@ export default function Squat({ nReps }: { nReps: number }) {
 
   const handleStep = () => setStep((prevStep) => prevStep + 1);
 
-  if (step === 0 && cameraPermission === "granted") {
+  if (step === 1 && cameraPermission === "granted") {
     handleStep();
   }
 
@@ -47,7 +50,10 @@ export default function Squat({ nReps }: { nReps: number }) {
     await navigator.mediaDevices.getUserMedia({ video: videoConfig });
   };
 
-  console.log("render", Math.random());
+  const handleReps = (reps: number) => {
+    handleStep();
+    setReps(reps);
+  };
 
   return (
     <>
@@ -61,13 +67,25 @@ export default function Squat({ nReps }: { nReps: number }) {
         hidden={step === 0}
       />
 
-      {!cameraPermission && (
+      {step === 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Reps
+            title={"How many squat reps would you like to perform?"}
+            button1={<button onClick={() => handleReps(5)}>5</button>}
+            button2={<button onClick={() => handleReps(10)}>10</button>}
+            button3={<button onClick={() => handleReps(25)}>25</button>}
+            button4={<button onClick={() => handleReps(50)}>50</button>}
+          ></Reps>
+        </motion.div>
+      )}
+
+      {step > 0 && !cameraPermission && (
         <>
           <LoadingSpinner className="h-12 w-12 animate-spin text-gray-500" />
         </>
       )}
 
-      {step === 0 && cameraPermission && cameraPermission !== "granted" && (
+      {step === 1 && cameraPermission && cameraPermission !== "granted" && (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <CardGrantAccess
@@ -83,7 +101,7 @@ export default function Squat({ nReps }: { nReps: number }) {
         </>
       )}
 
-      {step === 1 && cameraPermission === "granted" && (
+      {step === 2 && cameraPermission === "granted" && (
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
           <StandUpCheck
             webcam={webcam}
@@ -93,16 +111,24 @@ export default function Squat({ nReps }: { nReps: number }) {
         </motion.div>
       )}
 
-      {step === 2 && cameraPermission === "granted" && (
+      {step === 3 && cameraPermission === "granted" && (
+        <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+          <Countdown onStepChange={handleStep} />
+        </motion.div>
+      )}
+
+      {step === 4 && cameraPermission === "granted" && (
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
           <SquatRun
             onStepChange={handleStep}
             webcam={webcam}
             model={model}
-            nReps={nReps}
+            nReps={reps}
           />
         </motion.div>
       )}
+
+      {step === 5 && <Confetti />}
     </>
   );
 }

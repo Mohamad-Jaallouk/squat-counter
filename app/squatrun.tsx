@@ -5,23 +5,6 @@ import CardTopRight from "./components/cardTopRight";
 import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
 import Circle from "./components/circle";
 
-function _squat(landMarks: any, prev: any, setSquatCount: any, setAngle: any) {
-  let kneeAngleRadians = calculateAngle(
-    landMarks[landMark.RightHip],
-    landMarks[landMark.RightKnee],
-    landMarks[landMark.RightAnkle]
-  );
-  let kneeAngleDegree = convertToDegrees(kneeAngleRadians);
-  setAngle(kneeAngleDegree);
-
-  if (kneeAngleDegree < 90 && prev.current === "standing") {
-    setSquatCount((c: number) => c + 1);
-    prev.current = "squatting";
-  } else if (kneeAngleDegree > 90 && prev.current === "squatting") {
-    prev.current = "standing";
-  }
-}
-
 interface SquatRunProps {
   onStepChange: () => void;
   webcam: WebcamIterator | null;
@@ -35,12 +18,10 @@ export default function SquatRun({
   model,
   nReps,
 }: SquatRunProps) {
-  const [squatCount, setSquatCount] = useState(0);
   const prev = useRef("standing");
-  const score = useRef(0);
-  console.log("nReps", nReps);
-  console.log("squatCount", squatCount);
-  const [angle, setAngle] = useState(0);
+  const [squatCount, setSquatCount] = useState(0);
+  const [angle, setAngle] = useState(180);
+  const [stableAngle, setStableAngle] = useState(180);
 
   useEffect(() => {
     const runSquat = async () => {
@@ -48,30 +29,75 @@ export default function SquatRun({
       const img = await webcam.capture();
       const poses = await model.estimatePoses(img);
       img.dispose();
-      if (poses.length > 0 && poses[0].score! > 0.5) {
-        score.current = poses[0].score!;
-        const landMarks = poses[0].keypoints;
-        _squat(landMarks, prev, setSquatCount, setAngle);
+
+      if (poses.length > 0 && poses[0].score! > 0.7) {
+        const landMarks: poseDetection.Keypoint[] = poses[0].keypoints!;
+
+        if (
+          landMarks[landMark.RightShoulder].score! > 0.6 ||
+          landMarks[landMark.RightHip].score! > 0.6 ||
+          landMarks[landMark.RightKnee].score! > 0.6 ||
+          landMarks[landMark.RightAnkle].score! > 0.6
+        ) {
+          const hipAngleRadians = calculateAngle(
+            landMarks[landMark.RightShoulder],
+            landMarks[landMark.RightHip],
+            landMarks[landMark.RightKnee]
+          );
+          const hipAngleDegree = convertToDegrees(hipAngleRadians);
+
+          const kneeAngleRadians = calculateAngle(
+            landMarks[landMark.RightHip],
+            landMarks[landMark.RightKnee],
+            landMarks[landMark.RightAnkle]
+          );
+          const kneeAngleDegree = convertToDegrees(kneeAngleRadians);
+
+          setAngle(kneeAngleDegree);
+
+          if (
+            kneeAngleDegree < 90 &&
+            prev.current === "standing" &&
+            hipAngleDegree < 90
+          ) {
+            setSquatCount((prev) => prev + 1);
+            prev.current = "squatting";
+          } else if (
+            kneeAngleDegree > 90 &&
+            prev.current === "squatting" &&
+            hipAngleDegree > 90
+          ) {
+            prev.current = "standing";
+          }
+        }
       }
 
       requestAnimationFrame(runSquat);
     };
 
     requestAnimationFrame(runSquat);
-  }, [webcam, model, setSquatCount]);
+  }, [webcam, model]);
+
+  // Work as a stabilizer for the angle
+  useEffect(() => {
+    if (stableAngle - angle > 0 || stableAngle - angle < -5) {
+      setStableAngle(angle);
+    }
+  }, [angle, stableAngle]);
 
   useEffect(() => {
     if (squatCount === nReps) {
       onStepChange();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [squatCount]);
+  }, [nReps, onStepChange, squatCount]);
+
+  const angleView = Math.max(0, 160 - stableAngle); // 180 - 20 = 160 ==> -20 is a threshold
 
   return (
     <>
       <CardTopRight
-        progressBar={<Circle percent={angle} gap={true} />}
-        progressAction={angle.toFixed(0)}
+        progressBar={<Circle percent={Math.min(100, angleView)} gap={true} />}
+        progressAction={squatCount.toFixed(0)}
       />
     </>
   );
