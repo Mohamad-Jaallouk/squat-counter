@@ -40,6 +40,7 @@ export default function SquatRun({
           landMarks[landMark.RightAnkle].score! > 0.6
         ) {
           const hipAngleRadians = calculateAngle(
+            // Can deggree be added to the fumction.
             landMarks[landMark.RightShoulder],
             landMarks[landMark.RightHip],
             landMarks[landMark.RightKnee]
@@ -63,7 +64,7 @@ export default function SquatRun({
             setSquatCount((prev) => prev + 1);
             prev.current = "squatting";
           } else if (
-            kneeAngleDegree > 90 &&
+            kneeAngleDegree > 170 &&
             prev.current === "squatting" &&
             hipAngleDegree > 90
           ) {
